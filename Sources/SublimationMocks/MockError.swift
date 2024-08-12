@@ -1,5 +1,5 @@
 //
-//  Optional.swift
+//  MockError.swift
 //  SublimationNgrok
 //
 //  Created by Leo Dion.
@@ -27,15 +27,18 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
+package enum MockError<T: Equatable & Sendable>: Error { case value(T) }
+
+extension Result {
+  package var error: (any Error)? {
+    guard case let .failure(failure) = self else { return nil }
+    return failure
+  }
+
+  package func mockErrorValue<T: Equatable & Sendable>() -> T? {
+    guard let mockError = error as? MockError<T> else { return nil }
+
+    switch mockError { case let .value(value): return value
+    }
   }
 }

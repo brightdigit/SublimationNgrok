@@ -1,5 +1,5 @@
 //
-//  Optional.swift
+//  URL.swift
 //  SublimationNgrok
 //
 //  Created by Leo Dion.
@@ -27,15 +27,12 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
-  }
+package import Foundation
+
+#if canImport(FoundationNetworking)
+  package import FoundationNetworking
+#endif
+
+extension URL {
+  package static func random() -> URL { URL(fileURLWithPath: NSTemporaryDirectory()) }
 }

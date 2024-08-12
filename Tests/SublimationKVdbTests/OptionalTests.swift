@@ -1,6 +1,6 @@
 //
-//  Optional.swift
-//  SublimationNgrok
+//  OptionalTests.swift
+//  Sublimation
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -27,15 +27,21 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
+@testable import SublimationKVdb
+import XCTest
+
+internal class OptionalTests: XCTestCase {
+  internal func testFlatTuple() {
+    let nilValue: Int? = nil
+    let notNilValue: Int? = 12
+    let expectedNotNil = (12, 12)
+
+    XCTAssertNil(nilValue.flatTuple(notNilValue))
+    XCTAssertNil(nilValue.flatTuple(nilValue))
+    XCTAssertNil(notNilValue.flatTuple(nilValue))
+
+    let actualNotNil = notNilValue.flatTuple(notNilValue)
+    XCTAssertEqual(actualNotNil?.0, expectedNotNil.0)
+    XCTAssertEqual(actualNotNil?.1, expectedNotNil.1)
   }
 }

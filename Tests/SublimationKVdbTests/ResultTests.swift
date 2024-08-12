@@ -1,6 +1,6 @@
 //
-//  Optional.swift
-//  SublimationNgrok
+//  ResultTests.swift
+//  Sublimation
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -27,15 +27,23 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
+@testable import SublimationKVdb
+import SublimationMocks
+import XCTest
+
+internal class ResultTests: XCTestCase {
+  internal typealias MockResult = Result<UUID, any Error>
+  internal func testInit() {
+    let successValue = UUID()
+    let errorValue = UUID()
+
+    let successResult = MockResult(success: successValue, failure: nil)
+    let failedResult = MockResult(success: UUID(), failure: MockError.value(errorValue))
+    let emptyResult = MockResult(success: nil, failure: nil)
+
+    let actualErrorValue: UUID? = failedResult.mockErrorValue()
+    try XCTAssertEqual(successResult.get(), successValue)
+    XCTAssertEqual(actualErrorValue, errorValue)
+    XCTAssert(emptyResult.error is Result<UUID, any Error>.EmptyError)
   }
 }

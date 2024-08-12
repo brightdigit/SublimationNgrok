@@ -1,5 +1,5 @@
 //
-//  URL+KVdbURLConstructable.swift
+//  MockTunnelClient.swift
 //  SublimationNgrok
 //
 //  Created by Leo Dion.
@@ -27,32 +27,43 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-public import Foundation
-
 #if canImport(FoundationNetworking)
-  public import FoundationNetworking
+  @preconcurrency package import Foundation
+  extension URL: @unchecked Sendable {}
+#else
+  package import Foundation
 #endif
 
-/// A type representing a URL.
-///
-/// - Note: This type is an extension of `URL` and conforms to `KVdbURLConstructable`.
-///
-/// - SeeAlso: `KVdbURLConstructable`
-extension URL: KVdbURLConstructable {
-  ///   Initializes a `URL` instance with the given KVDB base and key bucket path.
-  ///
-  ///   - Parameters:
-  ///     - kvDBBase: The base URL of the KVDB.
-  ///     - keyBucketPath: The path to the key bucket.
-  ///
-  ///   - Note: This initializer is only available if `FoundationNetworking` is imported.
-  ///
-  ///   - Precondition: `kvDBBase` must be a valid URL.
-  ///
-  ///   - Postcondition: The resulting `URL` instance is constructed
-  ///   by appending `keyBucketPath` to `kvDBBase`.
-  public init(kvDBBase: String, keyBucketPath: String) {
+package actor MockTunnelClient<Key: Sendable>: TunnelClient {
+  package struct GetParameters {
+    package let key: Key
+    package let bucketName: String
+  }
+
+  package struct SaveParameters {
+    package let value: URL
+    package let key: Key
+    package let bucketName: String
+  }
+
+  internal let getValueResult: Result<URL, any Error>?
+  internal let saveValueError: (any Error)?
+
+  package private(set) var getValuesPassed = [GetParameters]()
+  package private(set) var saveValuesPassed = [SaveParameters]()
+  package init(getValueResult: Result<URL, any Error>? = nil, saveValueError: (any Error)? = nil) {
+    self.getValueResult = getValueResult
+    self.saveValueError = saveValueError
+  }
+
+  package func getValue(ofKey key: Key, fromBucket bucketName: String) async throws -> URL {
+    getValuesPassed.append(.init(key: key, bucketName: bucketName))
     // swiftlint:disable:next force_unwrapping
-    self = URL(string: kvDBBase)!.appendingPathComponent(keyBucketPath)
+    return try getValueResult!.get()
+  }
+
+  package func saveValue(_ value: URL, withKey key: Key, inBucket bucketName: String) async throws {
+    saveValuesPassed.append(.init(value: value, key: key, bucketName: bucketName))
+    if let saveValueError { throw saveValueError }
   }
 }

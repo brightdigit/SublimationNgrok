@@ -1,6 +1,6 @@
 //
-//  WritableTunnelRepositoryFactory.swift
-//  SublimationNgrok
+//  KVdbTunnelRepositoryFactoryTests.swift
+//  Sublimation
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -27,21 +27,43 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import Foundation
+import SublimationMocks
+import SublimationTunnel
+import XCTest
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
 #endif
 
-/// A factory protocol for creating writable tunnel repositories.
-///
-/// This protocol extends the `TunnelRepositoryFactory` protocol
-/// and requires the associated `TunnelRepositoryType`
-/// to conform to the `WritableTunnelRepository` protocol.
-///
-/// - Note: This protocol is part of the `Sublimation` framework.
-///
-/// - SeeAlso: `TunnelRepositoryFactory`
-/// - SeeAlso: `WritableTunnelRepository`
-public protocol WritableTunnelRepositoryFactory: TunnelRepositoryFactory
-where TunnelRepositoryType: WritableTunnelRepository {}
+internal class KVdbTunnelRepositoryFactoryTests: XCTestCase {
+  internal func testSetupClient() async throws {
+    let getURLExpected: URL = .random()
+    let client = MockTunnelClient<UUID>(
+      getValueResult: .success(getURLExpected),
+      saveValueError: nil
+    )
+    let saveKey = UUID()
+    let saveURL: URL = .random()
+
+    let getKey = UUID()
+
+    let bucketName = UUID().uuidString
+    let factory = TunnelBucketRepositoryFactory<UUID>(bucketName: bucketName)
+
+    let repository = factory.setupClient(client)
+
+    try await repository.saveURL(saveURL, withKey: saveKey)
+    let getURLActual = try await repository.tunnel(forKey: getKey)
+
+    let savedValue = await client.saveValuesPassed.last
+    XCTAssertEqual(saveKey, savedValue?.key)
+    XCTAssertEqual(saveURL, savedValue?.value)
+    XCTAssertEqual(bucketName, savedValue?.bucketName)
+
+    let getValue = await client.getValuesPassed.last
+    XCTAssertEqual(getKey, getValue?.key)
+    XCTAssertEqual(bucketName, getValue?.bucketName)
+
+    XCTAssertEqual(getURLActual, getURLExpected)
+  }
+}

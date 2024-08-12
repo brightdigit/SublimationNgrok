@@ -1,6 +1,6 @@
 //
-//  Optional.swift
-//  SublimationNgrok
+//  KVdbTests.swift
+//  Sublimation
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -27,15 +27,27 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
+import SublimationKVdb
+import SublimationMocks
+import XCTest
+
+internal class KVdbTests: XCTestCase {
+  internal func testPath() {
+    let key = UUID()
+    let bucket = UUID().uuidString
+    let actual = KVdb.path(forKey: key, atBucket: bucket)
+    XCTAssertEqual(actual, "/\(bucket)/\(key)")
+  }
+
+  internal func testConstruct() {
+    let key = UUID()
+    let bucket = UUID().uuidString
+    let url = KVdb.construct(MockURL.self, forKey: key, atBucket: bucket)
+    let expectedPath = KVdb.path(forKey: key, atBucket: bucket)
+
+    XCTAssertEqual(url.kvDBBase, KVdb.baseString)
+    XCTAssertEqual(url.keyBucketPath, expectedPath)
   }
 }
+
+extension MockURL: KVdbURLConstructable {}

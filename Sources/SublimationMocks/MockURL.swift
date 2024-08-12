@@ -1,6 +1,6 @@
 //
-//  KVdbTunnelClient 2.swift
-//  Sublimation
+//  MockURL.swift
+//  SublimationNgrok
 //
 //  Created by Leo Dion.
 //  Copyright © 2024 BrightDigit.
@@ -27,7 +27,11 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import Foundation
-import SublimationTunnel
-
-extension KVdbTunnelClient: TunnelClient {}
+package struct MockURL {
+  package let kvDBBase: String
+  package let keyBucketPath: String
+  package init(kvDBBase: String, keyBucketPath: String) {
+    self.kvDBBase = kvDBBase
+    self.keyBucketPath = keyBucketPath
+  }
+}

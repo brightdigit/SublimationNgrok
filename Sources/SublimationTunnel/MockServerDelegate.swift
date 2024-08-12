@@ -1,5 +1,5 @@
 //
-//  Optional.swift
+//  MockServerDelegate.swift
 //  SublimationNgrok
 //
 //  Created by Leo Dion.
@@ -27,15 +27,14 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-extension Optional {
-  ///   Returns a tuple containing the wrapped value
-  ///    of the optional and another optional value.
-  ///
-  ///   - Parameter other: Another optional value.
-  ///
-  ///   - Returns: A tuple containing the wrapped value of the optional and `other`,
-  ///   or `nil` if either the optional or `other` is `nil`.
-  internal func flatTuple<OtherType>(_ other: OtherType?) -> (Wrapped, OtherType)? {
-    flatMap { wrapped in other.map { (wrapped, $0) } }
-  }
+package import Foundation
+
+package final class MockServerDelegate: TunnelServerDelegate {
+  package let id: UUID
+
+  package init(id: UUID) { self.id = id }
+
+  package func server(_: any TunnelServer, updatedTunnel _: any Tunnel) {}
+
+  package func server(_: any TunnelServer, errorDidOccur _: any Error) {}
 }
