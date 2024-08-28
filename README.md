@@ -89,9 +89,7 @@ With SublimationNgrok you save the address (such as `https://c633-2600-1702-4050
 
 ## Installation
 
-Sublimation has two components: Server and Client. You can check out the SublimationDemoApp Xcode project for an example.
-
-To integrate **Sublimation** into your app using SPM, specify it in your Package.swift file:
+To integrate **SublimationNgrok** into your app using SPM, specify it in your Package.swift file:
 
 ```swift    
 let package = Package(
@@ -109,6 +107,9 @@ let package = Package(
   ]
 )
 ```
+
+For the client-side API, you only need the `SublimationKVdb` product from the package.
+
 
 # Usage
 
