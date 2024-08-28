@@ -1,0 +1,51 @@
+{
+  "originHash" : "748379ae4a60d1a595b6f25c7f9e6ed3c593fc47e7af12ac3ad9a7c80331a017",
+  "pins" : [
+    {
+      "identity" : "ngrokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/brightdigit/Ngrokit",
+      "state" : {
+        "revision" : "fd42d995dd046914333e4b034eeaff7fbd5efcbf",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "sublimation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/brightdigit/Sublimation",
+      "state" : {
+        "revision" : "99d0da9f907d27deb180582b274c5f83e6732921",
+        "version" : "2.0.0-beta.1"
+      }
+    },
+    {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types",
+      "state" : {
+        "revision" : "ae67c8178eb46944fd85e4dc6dd970e1f3ed6ccd",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
+      }
+    },
+    {
+      "identity" : "swift-openapi-runtime",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-openapi-runtime",
+      "state" : {
+        "revision" : "26e8ae3515d1ff3607e924ac96fc0094775f55e8",
+        "version" : "1.5.0"
+      }
+    }
+  ],
+  "version" : 3
+}
