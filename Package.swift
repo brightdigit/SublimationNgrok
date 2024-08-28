@@ -41,8 +41,8 @@ let package = Package(
     .library(name: "SublimationNgrok", targets: ["SublimationNgrok"])
   ],
   dependencies: [
-    .package(url: "https://github.com/brightdigit/Sublimation", branch: "32-swift-service-lifecycle-ci"),
-    .package(url: "https://github.com/brightdigit/Ngrokit", branch: "v1.0.0")
+    .package(url: "https://github.com/brightdigit/Sublimation", from: "2.0.0-alpha.5"),
+    .package(url: "https://github.com/brightdigit/Ngrokit", from: "1.0.0")
   ],
   targets: [
     .target(
